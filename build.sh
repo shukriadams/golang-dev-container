@@ -22,7 +22,7 @@ else
 fi
 
 if [ $SMOKETEST -eq 1 ]; then
-    OUT=$(docker run shukriadams:golang-dev-container go version)
+    OUT=$(docker run shukriadams/golang-dev-container:latest go version)
     echo $OUT | grep "go version"
     echo "test complete"
 else
