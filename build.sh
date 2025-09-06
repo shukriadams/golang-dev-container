@@ -4,25 +4,17 @@ set -e
 DOCKERPUSH=0
 SMOKETEST=0
 BUILD=0
-COMPOSE="docker-compose"
 
 while [ -n "$1" ]; do 
     case "$1" in
     --push|-p) DOCKERPUSH=1 ;;
     --test|-t) SMOKETEST=1 ;;
     --build|-b) BUILD=1 ;;
-    --github-compose) COMPOSE="docker compose" ;;
     esac 
     shift
 done
 
 if [ $BUILD -eq 1 ]; then
-    $COMPOSE down
-    sudo rm -rf  ./../tmp
-
-    # force remove existing image to all layers rebuild, this is for local environments only. on github 
-    # build environment is reset by default
-    docker rmi shukriadams/golang-dev-container:latest -f
     docker build -t shukriadams/golang-dev-container .
     echo "build complete"
 else
