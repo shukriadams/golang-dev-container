@@ -4,7 +4,11 @@ FROM ubuntu:22.04
 RUN apt-get update \
     && apt-get install -y curl git wget jq \
     && useradd -m golangdev \
-    && su golangdev 
+    && su golangdev \
+    && wget https://go.dev/dl/go1.23.6.linux-amd64.tar.gz -O gol.tar.gz \
+    && rm -rf /usr/local/go \
+    && tar -C /usr/local -xzf gol.tar.gz \
+    && rm gol.tar.gz 
 
 # switch to dev user
 USER golangdev
@@ -12,13 +16,7 @@ USER golangdev
 ENV GOPATH "/home/golangdev/go"
 ENV PATH "$PATH:/usr/local/go/bin:$GOPATH/bin"
 
-# install go
-RUN wget https://go.dev/dl/go1.23.6.linux-amd64.tar.gz -O gol.tar.gz \
-    && rm -rf /usr/local/go \
-    && tar -C /usr/local -xzf gol.tar.gz \
-    && rm gol.tar.gz \
-    # configure go
-    && echo "export GOPATH=/home/golangdev/go" >> ~/.bashrc \
+RUN echo "export GOPATH=/home/golangdev/go" >> ~/.bashrc \
     && echo "export PATH=$PATH:$GOPATH/bin:/usr/local/go/bin" >> ~/.bashrc \
     # install go dev extensions
     && go install github.com/go-delve/delve/cmd/dlv@v1.24.0 \
