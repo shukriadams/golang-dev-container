@@ -1,18 +1,19 @@
 # build locally with : docker build .
 FROM ubuntu:22.04
 
-ENV GOPATH "/home/golangdev/go"
-ENV PATH "$PATH:/usr/local/go/bin:$GOPATH/bin"
-
-# must set user before installing go, else root owns all
-USER golangdev
-
 RUN apt-get update \
     && apt-get install -y curl git wget jq \
     && useradd -m golangdev \
-    && su golangdev \
-    # install go
-    && wget https://go.dev/dl/go1.23.6.linux-amd64.tar.gz -O gol.tar.gz \
+    && su golangdev 
+
+# switch to dev user
+USER golangdev
+
+ENV GOPATH "/home/golangdev/go"
+ENV PATH "$PATH:/usr/local/go/bin:$GOPATH/bin"
+
+# install go
+RUN wget https://go.dev/dl/go1.23.6.linux-amd64.tar.gz -O gol.tar.gz \
     && rm -rf /usr/local/go \
     && tar -C /usr/local -xzf gol.tar.gz \
     && rm gol.tar.gz \
